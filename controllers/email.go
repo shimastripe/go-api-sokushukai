@@ -33,7 +33,7 @@ func GetEmails(c *gin.Context) {
 
 	var emails []models.Email
 	if err := db.Select("*").Find(&emails).Error; err != nil {
-		c.JSON(500, gin.H{"error": "error occured"})
+		c.JSON(500, gin.H{"error": err.Error()})
 		return
 	}
 
@@ -46,9 +46,11 @@ func GetEmails(c *gin.Context) {
 	}
 	pagination.SetHeaderLink(c, index)
 
-	if version.Range("1.0.0", "<=", ver) && version.Range(ver, "<", "2.0.0") {
+	if version.Range(ver, "<", "1.0.0") {
 		// conditional branch by version.
-		// 1.0.0 <= this version < 2.0.0 !!
+		// this version < 1.0.0 !!
+		c.JSON(400, gin.H{"error": "this version (< 1.0.0) is not supported!"})
+		return
 	}
 
 	fieldMap := []map[string]interface{}{}
@@ -79,9 +81,11 @@ func GetEmail(c *gin.Context) {
 		return
 	}
 
-	if version.Range("1.0.0", "<=", ver) && version.Range(ver, "<", "2.0.0") {
+	if version.Range(ver, "<", "1.0.0") {
 		// conditional branch by version.
-		// 1.0.0 <= this version < 2.0.0 !!
+		// this version < 1.0.0 !!
+		c.JSON(400, gin.H{"error": "this version (< 1.0.0) is not supported!"})
+		return
 	}
 
 	fieldMap := helper.FieldToMap(email, fields)
@@ -99,7 +103,7 @@ func CreateEmail(c *gin.Context) {
 	var email models.Email
 	c.Bind(&email)
 	if db.Create(&email).Error != nil {
-		content := gin.H{"error": "error occured"}
+		content := gin.H{"error": err.Error()}
 		c.JSON(500, content)
 		return
 	}

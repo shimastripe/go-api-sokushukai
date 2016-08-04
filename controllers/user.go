@@ -33,7 +33,7 @@ func GetUsers(c *gin.Context) {
 
 	var users []models.User
 	if err := db.Select("*").Find(&users).Error; err != nil {
-		c.JSON(500, gin.H{"error": "error occured"})
+		c.JSON(500, gin.H{"error": err.Error()})
 		return
 	}
 
@@ -46,16 +46,23 @@ func GetUsers(c *gin.Context) {
 	}
 	pagination.SetHeaderLink(c, index)
 
-	if version.Range("1.0.0", "<=", ver) && version.Range(ver, "<", "2.0.0") {
+	if version.Range(ver, "<", "1.0.0") {
 		// conditional branch by version.
-		// 1.0.0 <= this version < 2.0.0 !!
+		// this version < 1.0.0 !!
+		c.JSON(400, gin.H{"error": "this version (< 1.0.0) is not supported!"})
+		return
 	}
 
 	fieldMap := []map[string]interface{}{}
 	for key, _ := range users {
 		fieldMap = append(fieldMap, helper.FieldToMap(users[key], fields))
 	}
-	c.JSON(200, fieldMap)
+	_, ok := c.GetQuery("pretty")
+	if ok {
+		c.IndentedJSON(200, fieldMap)
+	} else {
+		c.JSON(200, fieldMap)
+	}
 }
 
 func GetUser(c *gin.Context) {
@@ -79,13 +86,20 @@ func GetUser(c *gin.Context) {
 		return
 	}
 
-	if version.Range("1.0.0", "<=", ver) && version.Range(ver, "<", "2.0.0") {
+	if version.Range(ver, "<", "1.0.0") {
 		// conditional branch by version.
-		// 1.0.0 <= this version < 2.0.0 !!
+		// this version < 1.0.0 !!
+		c.JSON(400, gin.H{"error": "this version (< 1.0.0) is not supported!"})
+		return
 	}
 
 	fieldMap := helper.FieldToMap(user, fields)
-	c.JSON(200, fieldMap)
+	_, ok := c.GetQuery("pretty")
+	if ok {
+		c.IndentedJSON(200, fieldMap)
+	} else {
+		c.JSON(200, fieldMap)
+	}
 }
 
 func CreateUser(c *gin.Context) {
@@ -99,7 +113,7 @@ func CreateUser(c *gin.Context) {
 	var user models.User
 	c.Bind(&user)
 	if db.Create(&user).Error != nil {
-		content := gin.H{"error": "error occured"}
+		content := gin.H{"error": err.Error()}
 		c.JSON(500, content)
 		return
 	}

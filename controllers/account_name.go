@@ -33,7 +33,7 @@ func GetAccountNames(c *gin.Context) {
 
 	var accountnames []models.AccountName
 	if err := db.Select("*").Find(&accountnames).Error; err != nil {
-		c.JSON(500, gin.H{"error": "error occured"})
+		c.JSON(500, gin.H{"error": err.Error()})
 		return
 	}
 
@@ -46,9 +46,11 @@ func GetAccountNames(c *gin.Context) {
 	}
 	pagination.SetHeaderLink(c, index)
 
-	if version.Range("1.0.0", "<=", ver) && version.Range(ver, "<", "2.0.0") {
+	if version.Range(ver, "<", "1.0.0") {
 		// conditional branch by version.
-		// 1.0.0 <= this version < 2.0.0 !!
+		// this version < 1.0.0 !!
+		c.JSON(400, gin.H{"error": "this version (< 1.0.0) is not supported!"})
+		return
 	}
 
 	fieldMap := []map[string]interface{}{}
@@ -79,9 +81,11 @@ func GetAccountName(c *gin.Context) {
 		return
 	}
 
-	if version.Range("1.0.0", "<=", ver) && version.Range(ver, "<", "2.0.0") {
+	if version.Range(ver, "<", "1.0.0") {
 		// conditional branch by version.
-		// 1.0.0 <= this version < 2.0.0 !!
+		// this version < 1.0.0 !!
+		c.JSON(400, gin.H{"error": "this version (< 1.0.0) is not supported!"})
+		return
 	}
 
 	fieldMap := helper.FieldToMap(accountname, fields)
@@ -99,7 +103,7 @@ func CreateAccountName(c *gin.Context) {
 	var accountname models.AccountName
 	c.Bind(&accountname)
 	if db.Create(&accountname).Error != nil {
-		content := gin.H{"error": "error occured"}
+		content := gin.H{"error": err.Error()}
 		c.JSON(500, content)
 		return
 	}
