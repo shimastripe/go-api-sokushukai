@@ -4,6 +4,7 @@ import "time"
 
 type User struct {
 	ID          uint         `gorm:"primary_key;AUTO_INCREMENT" json:"id"`
+	Name        string       `json:"name"`
 	AccountName *AccountName `json:"account_name"`
 	Emails      []*Email     `json:"emails"`
 	CreatedAt   time.Time    `json:"created_at"`
