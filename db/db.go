@@ -6,6 +6,8 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/shimastripe/go-api-sokushukai/models"
+
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
@@ -21,6 +23,14 @@ func Connect() *gorm.DB {
 	db.LogMode(false)
 	if gin.IsDebugging(){
 		db.LogMode(true)
+	}
+
+	if os.Getenv("AUTOMIGRATE") == "true" {
+		db.AutoMigrate(
+			&models.Email{},
+			&models.AccountName{},
+			&models.User{},
+		)
 	}
 	return db
 }

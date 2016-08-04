@@ -1,0 +1,93 @@
+# Group AccountNames
+Welcome to the accountnames API. This API provides access to the accountnames service.
+
+## accountnames [/accountnames]
+
+### Create accountname [POST]
+
+Create a new accountname
+
++ Request accountnames (application/json; charset=utf-8)
+    + Headers
+
+            Accept: application/vnd.shimastripe+json
+    + Attributes
+
+        + user_id: 1 (number)
+        + name: NAME (string)
+        + user (users)
+
++ Response 201 (application/json; charset=utf-8)
+    + Attributes (accountnames)
+
+### Get accountnames [GET]
+
+Returns accountname list.
+
++ Request accountnames (application/json; charset=utf-8)
+    + Headers
+
+            Accept: application/vnd.shimastripe+json
+
++ Response 200 (application/json; charset=utf-8)
+    + Attributes (array, fixed)
+        + (accountnames)
+
+## accountname details [/accountnames/{id}]
+
++ Parameters
+    + id: `1` (enum[string]) - The ID of the desired accountname.
+        + Members
+            + `1`
+            + `2`
+            + `3`
+
+### Get accountname [GET]
+
+Returns accountname.
+
++ Request accountnames (application/json; charset=utf-8)
+    + Headers
+
+            Accept: application/vnd.shimastripe+json
+
++ Response 200 (application/json; charset=utf-8)
+    + Attributes (accountnames, fixed)
+
+### Update accountname [PUT]
+
+Update accountname.
+
++ Request accountnames (application/json; charset=utf-8)
+    + Headers
+
+            Accept: application/vnd.shimastripe+json
+    + Attributes
+
+        + user_id: 1 (number)
+        + name: NAME (string)
+        + user (users)
+
++ Response 200 (application/json; charset=utf-8)
+    + Attributes (accountnames)
+
+### Delete accountname [DELETE]
+
+Delete accountname.
+
++ Request accountnames (application/json; charset=utf-8)
+    + Headers
+
+            Accept: application/vnd.shimastripe+json
+
++ Response 204
+
+# Data Structures
+## accountnames (object, fixed)
+
++ id: 1 (number)
++ user_id: 1 (number)
++ name: NAME (string)
++ user (users)
++ created_at ()
++ updated_at ()
