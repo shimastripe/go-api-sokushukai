@@ -1,0 +1,9 @@
+.DS_Store
+.git
+README.md
+
+go-api-sokushukai
+vendor
+
+glide
+bin
