@@ -1,2 +1,7 @@
 .DS_Store
 bin/
+
+/go-api-sokushukai
+/vendor
+
+/glide
